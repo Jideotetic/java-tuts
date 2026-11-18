@@ -3,7 +3,7 @@ package src;
 
 
 class CementMixer implements AutoCloseable {
-    public void startMixer() {
+    public void startMixer() throws RuntimeException {
         System.out.println("Mixer started...");
         throw new RuntimeException("Mixer overload!");
     }
@@ -15,13 +15,11 @@ class CementMixer implements AutoCloseable {
 }
 
 public class ExceptionDemo {
-    public static void main(String[] args) {
+     static void main(String[] args) {
         try (CementMixer mixer = new CementMixer()) {
             mixer.startMixer();
         } catch (RuntimeException e) {
             System.out.println("Problem occurred: " + e.getMessage());
-        } finally {
-            System.out.println("Construction site closing for the day.");
         }
     }
 }
