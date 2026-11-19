@@ -102,8 +102,4 @@ public class CoffeeMachine {
 
         System.out.println("Coffees made since cleaning: " + coffeesMade);
     }
-
-    public boolean isCleaningRequired() {
-        return cleaningRequired;
-    }
 }
