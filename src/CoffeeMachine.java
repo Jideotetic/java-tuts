@@ -15,25 +15,24 @@ public class CoffeeMachine {
 
     static void main(String[] args) {
 
-        printResources();
+        while (true) {
+            printResources();
+            String action = performAction();
 
-        String action = performAction();
+            if (action.equals("exit")) {
+                break;
+            }
 
-        switch (action) {
-            case "buy" -> {
-                String type = selectTypeOfCoffee();
-                buyCoffee(type);
+            switch (action) {
+                case "buy" -> buyCoffee(selectTypeOfCoffee());
+                case "fill" -> addResources();
+                case "take" -> takeEarnings();
+                default -> System.out.println("Invalid action");
             }
-            case "fill" -> {
-                addResources();
-            }
-            case "take" -> {
-                takeEarnings();
-            }
-            default -> System.out.println("Invalid action");
         }
 
-        printResources();
+
+        input.close();
     }
 
     static void printResources() {
@@ -42,7 +41,7 @@ public class CoffeeMachine {
     }
 
     static String performAction() {
-        System.out.println("Write action (buy, fill, take): ");
+        System.out.println("Write action (buy, fill, take, exit): ");
         return input.nextLine();
     }
 
@@ -54,7 +53,7 @@ public class CoffeeMachine {
     static void buyCoffee(@NotNull String typeOfCoffee) {
         switch (typeOfCoffee) {
             case "1" -> {
-                if (hasEnoughResources(250, 0, 16)) {
+                if (hasLessResources(250, 0, 16)) {
                     System.out.println("Sorry, not enough resources!");
                     return;
                 }
@@ -64,7 +63,7 @@ public class CoffeeMachine {
                 earnings += 4;
             }
             case "2" -> {
-                if (hasEnoughResources(350, 75, 20)) {
+                if (hasLessResources(350, 75, 20)) {
                     System.out.println("Sorry, not enough resources!");
                     return;
                 }
@@ -75,7 +74,7 @@ public class CoffeeMachine {
                 earnings += 7;
             }
             case "3" -> {
-                if (hasEnoughResources(200, 100, 12)) {
+                if (hasLessResources(200, 100, 12)) {
                     System.out.println("Sorry, not enough resources!");
                     return;
                 }
@@ -89,15 +88,32 @@ public class CoffeeMachine {
         }
     }
 
-    static boolean hasEnoughResources(int requiredWater, int requiredMilk, int requiredBeans) {
+    static boolean hasLessResources(int requiredWater, int requiredMilk, int requiredBeans) {
         return water < requiredWater || milk < requiredMilk || beans < requiredBeans || disposableCups < 1;
     }
 
     static void addResources() {
+        System.out.println("How many ml of water to add: ");
+        water += input.nextInt();
 
+        System.out.println("How many ml of milk to add: ");
+        milk += input.nextInt();
+
+        System.out.println("How many beans to add: ");
+        beans += input.nextInt();
+
+        System.out.println("How many disposable cups to add: ");
+        disposableCups += input.nextInt();
+
+        input.nextLine();
     }
 
     static void takeEarnings() {
-
+        if(earnings < 1) {
+            System.out.println("No earnings!");
+            return;
+        }
+        System.out.println("I gave you $" + earnings);
+        earnings = 0;
     }
 }
