@@ -14,7 +14,7 @@ public class CoffeeMachine {
     static void main(String[] args) {
 
         while (true) {
-            printResources();
+
             String action = performAction();
 
             if (action.equals("exit")) {
@@ -25,6 +25,7 @@ public class CoffeeMachine {
                 case "buy" -> buyCoffee(selectTypeOfCoffee());
                 case "fill" -> addResources();
                 case "take" -> takeEarnings();
+                case "remaining" -> printResources();
                 default -> System.out.println("Invalid action");
             }
         }
@@ -39,55 +40,60 @@ public class CoffeeMachine {
     }
 
     static String performAction() {
-        System.out.println("Write action (buy, fill, take, exit): ");
-        return input.nextLine();
+        System.out.println("Write action (buy, fill, take, exit, remaining): ");
+        return input.nextLine().trim().toLowerCase();
     }
 
     static String selectTypeOfCoffee() {
-        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino: ");
-        return input.nextLine();
+        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back to main menu: ");
+        return input.nextLine().trim().toLowerCase();
     }
 
     static void buyCoffee(String typeOfCoffee) {
         switch (typeOfCoffee) {
-            case "1" -> {
-                if (hasLessResources(250, 0, 16)) {
-                    System.out.println("Sorry, not enough resources!");
-                    return;
-                }
-                water -= 250;
-                beans -= 16;
-                disposableCups--;
-                earnings += 4;
-            }
-            case "2" -> {
-                if (hasLessResources(350, 75, 20)) {
-                    System.out.println("Sorry, not enough resources!");
-                    return;
-                }
-                water -= 350;
-                milk -= 75;
-                beans -= 20;
-                disposableCups--;
-                earnings += 7;
-            }
-            case "3" -> {
-                if (hasLessResources(200, 100, 12)) {
-                    System.out.println("Sorry, not enough resources!");
-                    return;
-                }
-                water -= 200;
-                milk -= 100;
-                beans -= 12;
-                disposableCups--;
-                earnings += 6;
-            }
+            case "1" -> makeCoffee(250, 0, 16, 4);
+            case "2" -> makeCoffee(350, 75, 20, 7);
+            case "3" -> makeCoffee(200, 100, 12, 6);
+            case "back" -> System.out.println("Returning to main menu...");
             default -> System.out.println("Invalid type");
         }
     }
 
-    static boolean hasLessResources(int requiredWater, int requiredMilk, int requiredBeans) {
-        return water < requiredWater || milk < requiredMilk || beans < requiredBeans || disposableCups < 1;
+    static void makeCoffee(int requiredWater, int requiredMilk, int requiredBeans, int price) {
+        String missingResource = checkResources(requiredWater, requiredMilk, requiredBeans);
+
+        if (missingResource != null) {
+            System.out.println("Sorry, not enough " + missingResource + "!");
+            return;
+        }
+
+        water -= requiredWater;
+        milk -= requiredMilk;
+        beans -= requiredBeans;
+        disposableCups--;
+        earnings += price;
+
+        System.out.println("I have enough resources, making you a coffee!");
+    }
+
+    static String checkResources(int requiredWater, int requiredMilk, int requiredBeans) {
+        if (water < requiredWater) {
+            return "water";
+        }
+
+        if (milk < requiredMilk) {
+            return "milk";
+        }
+
+        if (beans < requiredBeans) {
+            return "beans";
+        }
+
+        if (disposableCups < 1) {
+            return "disposable cups";
+        }
+
+        return null;
     }
 
     static void addResources() {
@@ -107,10 +113,6 @@ public class CoffeeMachine {
     }
 
     static void takeEarnings() {
-        if(earnings < 1) {
-            System.out.println("No earnings!");
-            return;
-        }
         System.out.println("I gave you $" + earnings);
         earnings = 0;
     }
