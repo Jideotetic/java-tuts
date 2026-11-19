@@ -28,15 +28,15 @@ public class CoffeeMachine {
             return;
         }
 
-        water -= coffee.getWater();
-        milk -= coffee.getMilk();
-        beans -= coffee.getBeans();
+        water -= coffee.water();
+        milk -= coffee.milk();
+        beans -= coffee.beans();
         disposableCups--;
-        earnings += coffee.getCost();
+        earnings += coffee.cost();
 
         coffeesMade++;
 
-        System.out.println("I have enough resources, making you a " + coffee.getName() + "!");
+        System.out.println("I have enough resources, making you a " + coffee.name() + "!");
 
         if (coffeesMade >= 10) {
             cleaningRequired = true;
@@ -45,15 +45,15 @@ public class CoffeeMachine {
     }
 
     private String checkResources(Coffee coffee) {
-        if (water < coffee.getWater()) {
+        if (water < coffee.water()) {
             return "water";
         }
 
-        if (milk < coffee.getMilk()) {
+        if (milk < coffee.milk()) {
             return "milk";
         }
 
-        if (beans < coffee.getBeans()) {
+        if (beans < coffee.beans()) {
             return "beans";
         }
 
