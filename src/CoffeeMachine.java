@@ -1,31 +1,103 @@
 package src;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Scanner;
 
 public class CoffeeMachine {
+    private static final Scanner input = new Scanner(System.in);
+
+    private static int water = 400;
+    private static int milk = 540;
+    private static int beans = 120;
+    private static int disposableCups = 9;
+    private static int earnings = 550;
+
     static void main(String[] args) {
-        final int waterPerCup = 200;
-        final int milkPerCup = 50;
-        final int beansPerCup = 15;
-        Scanner input = new Scanner(System.in);
 
-        System.out.println("Write how many ml of water the coffee machine has: ");
-        int water = input.nextInt();
-        System.out.println("Write how many ml of milk the coffee machine has: ");
-        int milk = input.nextInt();
-        System.out.println("Write how many grams of coffee beans the coffee machine has: ");
-        int beans = input.nextInt();
-        System.out.println("How many cups of coffee will you like: ");
-        int cups = input.nextInt();
+        printResources();
 
-        int possible = Math.min(water / waterPerCup, Math.min(milk / milkPerCup, beans / beansPerCup));
+        String action = performAction();
 
-        if(possible == cups){
-            System.out.println("Yes, I can make that amount of coffee");
-        } else if (possible > cups) {
-            System.out.println("Yes, I can make that amount of coffee (and even " + (possible - cups) + " more than that)");
-        } else {
-            System.out.println("No, I can make only " + possible + " cup(s) of coffee");
+        switch (action) {
+            case "buy" -> {
+                String type = selectTypeOfCoffee();
+                buyCoffee(type);
+            }
+            case "fill" -> {
+                addResources();
+            }
+            case "take" -> {
+                takeEarnings();
+            }
+            default -> System.out.println("Invalid action");
         }
+
+        printResources();
+    }
+
+    static void printResources() {
+        System.out.println("The coffee machine has:\n" + water + " ml of water\n" + milk + " ml of milk\n" + beans + " g of beans\n" + disposableCups + " disposable cups\n" + "$" + earnings + " of money"
+        );
+    }
+
+    static String performAction() {
+        System.out.println("Write action (buy, fill, take): ");
+        return input.nextLine();
+    }
+
+    static String selectTypeOfCoffee() {
+        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino: ");
+        return input.nextLine();
+    }
+
+    static void buyCoffee(@NotNull String typeOfCoffee) {
+        switch (typeOfCoffee) {
+            case "1" -> {
+                if (hasEnoughResources(250, 0, 16)) {
+                    System.out.println("Sorry, not enough resources!");
+                    return;
+                }
+                water -= 250;
+                beans -= 16;
+                disposableCups--;
+                earnings += 4;
+            }
+            case "2" -> {
+                if (hasEnoughResources(350, 75, 20)) {
+                    System.out.println("Sorry, not enough resources!");
+                    return;
+                }
+                water -= 350;
+                milk -= 75;
+                beans -= 20;
+                disposableCups--;
+                earnings += 7;
+            }
+            case "3" -> {
+                if (hasEnoughResources(200, 100, 12)) {
+                    System.out.println("Sorry, not enough resources!");
+                    return;
+                }
+                water -= 200;
+                milk -= 100;
+                beans -= 12;
+                disposableCups--;
+                earnings += 6;
+            }
+            default -> System.out.println("Invalid type");
+        }
+    }
+
+    static boolean hasEnoughResources(int requiredWater, int requiredMilk, int requiredBeans) {
+        return water < requiredWater || milk < requiredMilk || beans < requiredBeans || disposableCups < 1;
+    }
+
+    static void addResources() {
+
+    }
+
+    static void takeEarnings() {
+
     }
 }
