@@ -1,7 +1,5 @@
 package src;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Scanner;
 
 public class CoffeeMachine {
@@ -50,7 +48,7 @@ public class CoffeeMachine {
         return input.nextLine();
     }
 
-    static void buyCoffee(@NotNull String typeOfCoffee) {
+    static void buyCoffee(String typeOfCoffee) {
         switch (typeOfCoffee) {
             case "1" -> {
                 if (hasLessResources(250, 0, 16)) {
